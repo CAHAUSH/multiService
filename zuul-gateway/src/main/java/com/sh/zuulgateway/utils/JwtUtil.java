@@ -4,10 +4,11 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.Map;
-
+@Component
 public class JwtUtil {
     /*签名秘钥*/
     private static final String SIGNATURE_KEY="L34iu*06jklKNEzhqm8uydscnode-96?k";
