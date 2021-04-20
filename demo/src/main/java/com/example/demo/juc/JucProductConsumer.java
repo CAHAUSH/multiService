@@ -10,7 +10,7 @@ public class JucProductConsumer {
         new Thread(()->{
             try {
                 for (int i = 0; i < 10; i++) {
-                    data.increment();
+                    data.product();
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -19,7 +19,7 @@ public class JucProductConsumer {
         new Thread(()->{
             try {
                 for (int i = 0; i < 10; i++) {
-                    data.decrement();
+                    data.consumer();
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -28,7 +28,7 @@ public class JucProductConsumer {
         new Thread(()->{
             try {
                 for (int i = 0; i < 10; i++) {
-                    data.increment();
+                    data.product();
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -37,7 +37,7 @@ public class JucProductConsumer {
         new Thread(()->{
             try {
                 for (int i = 0; i < 10; i++) {
-                    data.decrement();
+                    data.consumer();
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -48,10 +48,11 @@ public class JucProductConsumer {
 
 class DataContainer1{
     private int num = 0;
+    private int size = 20;
     private int waitnum = 0;
     Lock lock = new ReentrantLock();
     Condition condition = lock.newCondition();
-    public void increment() throws InterruptedException {
+    public void product() throws InterruptedException {
         /*condition.await();//等待
         condition.signalAll();//唤醒*/
 
@@ -59,7 +60,7 @@ class DataContainer1{
         //if(num != 0){
         lock.lock();
         try{
-            while (num != 0){
+            while (num >=20){
                 //线程等待
                 //System.out.println(Thread.currentThread().getName()+"-->等待:"+(++waitnum));
                 condition.await();
@@ -71,7 +72,8 @@ class DataContainer1{
             lock.unlock();
         }
     }
-    public void decrement() throws InterruptedException {
+    //消费消息
+    public void consumer() throws InterruptedException {
         lock.lock();
         try{
             while (num == 0){
