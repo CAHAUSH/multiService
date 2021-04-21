@@ -4,7 +4,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 /*
-* BlockingQueue 阻塞队列，，4组API
+* BlockingQueue 阻塞队列，，4组API，可以设置队列的容量
 *
 * */
 public class BlockingQueueTest {
