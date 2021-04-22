@@ -12,11 +12,18 @@ import java.util.concurrent.*;
                               BlockingQueue<Runnable> workQueue,  阻塞队列，排队请求，最大21亿
                               ThreadFactory threadFactory,   线程工厂
                               RejectedExecutionHandler handler) {   拒绝策略
+                              *
+  * 4大拒绝策略：https://www.jianshu.com/p/9fec2424de54
+  * new ThreadPoolExecutor.AbortPolicy());//拒绝策略，共4种策略；AbortPolicy，超出承载抛异常
+    new ThreadPoolExecutor.CallerRunsPolicy());//被拒绝的线程会被主线程（线程池的执行线程）执行，结束后继续执行线程池内部的线程
+    new ThreadPoolExecutor.DiscardPolicy());//执行最大承载线程，超出的部分直接被丢弃，不执行，不会抛出异常
+    new ThreadPoolExecutor.DiscardOldestPolicy());//尝试去和最早的线程进行竞争，成功就取执行，不会抛出异常
+  *
 * */
 public class ThreadPoolTest {
     public static void main(String[] args) {
         //以下三种方式，不推荐使用，尽量不要使用； 使用ThreadPoolExecutor来代替创建
-        ExecutorService threadPool = Executors.newSingleThreadExecutor();
+        /*ExecutorService threadPool = Executors.newSingleThreadExecutor();
         ExecutorService threadPoolFixed = Executors.newFixedThreadPool(5);
         ExecutorService threadPoolCached = Executors.newCachedThreadPool();
         try{
@@ -41,20 +48,27 @@ public class ThreadPoolTest {
             threadPool.shutdown();
             threadPoolFixed.shutdown();
             threadPoolCached.shutdown();
-        }
+        }*/
 
         //自定义线程池，手动创建线程池的方式
-        //最大承载：deque + maxsize
-        ExecutorService threadPoolUserDefine = new ThreadPoolExecutor(2,5,3,
+        //最大承载：deque + maxsize；超出最大承载抛出异常
+        ExecutorService threadPoolUserDefine = new ThreadPoolExecutor(
+                2,
+                5,
+                3,
                 TimeUnit.SECONDS,
                 new LinkedBlockingDeque<>(3),
                 Executors.defaultThreadFactory(),
-                new ThreadPoolExecutor.AbortPolicy());//拒绝策略，共4种策略
+                //new ThreadPoolExecutor.AbortPolicy());//拒绝策略，共4种策略；AbortPolicy，超出承载抛异常
+                //new ThreadPoolExecutor.CallerRunsPolicy());//被拒绝的线程会被主线程（线程池的执行线程）执行，结束后继续执行线程池内部的线程
+                //new ThreadPoolExecutor.DiscardPolicy());//执行最大承载线程，超出的部分直接被丢弃，不执行，不会抛出异常
+                new ThreadPoolExecutor.DiscardOldestPolicy());//尝试去和最早的线程进行竞争，成功就取执行，不会抛出异常
 
         try {
-            for (int i = 1; i <=8 ; i++) {
+            for (int i = 1; i <=11 ; i++) {
+                final int temp=i;
                 threadPoolUserDefine.execute(()->{
-                    System.out.println(Thread.currentThread().getName()+"ok");
+                    System.out.println(Thread.currentThread().getName()+"ok"+String.valueOf(temp));
                 });
             }
         }
