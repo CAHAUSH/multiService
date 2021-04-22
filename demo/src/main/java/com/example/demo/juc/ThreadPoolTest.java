@@ -19,6 +19,12 @@ import java.util.concurrent.*;
     new ThreadPoolExecutor.DiscardPolicy());//执行最大承载线程，超出的部分直接被丢弃，不执行，不会抛出异常
     new ThreadPoolExecutor.DiscardOldestPolicy());//尝试去和最早的线程进行竞争，成功就取执行，不会抛出异常
   *
+  *
+  * 问题：：线程池的最大线程数到底该如何定义
+  * 1、CPU密集型：电脑CPU几核就设置为几，Runtime.getRuntime().availableProcessors()
+  * 2、IP密集型：> 程序中十分消耗IO的线程
+  *      程序，有15个大型任务， io十分占用资源
+  *
 * */
 public class ThreadPoolTest {
     public static void main(String[] args) {
@@ -50,11 +56,13 @@ public class ThreadPoolTest {
             threadPoolCached.shutdown();
         }*/
 
+        System.out.println("CPU核数"+Runtime.getRuntime().availableProcessors());
+
         //自定义线程池，手动创建线程池的方式
         //最大承载：deque + maxsize；超出最大承载抛出异常
         ExecutorService threadPoolUserDefine = new ThreadPoolExecutor(
                 2,
-                5,
+                5, //Runtime.getRuntime().availableProcessors()
                 3,
                 TimeUnit.SECONDS,
                 new LinkedBlockingDeque<>(3),
