@@ -20,8 +20,9 @@ public class StreamTest {
         List<User> users= Arrays.asList(user1,user2,user3,user4,user5,user6);
         users.stream().filter(user -> user.getId()%2==0)
                 .filter(user -> user.getAge()>=23)
-                .map(user -> {return user.getName().toUpperCase();})
-                .forEach(user -> System.out.println(user.getId()));
+                .map(user -> user.getName().toUpperCase())
+                .forEach(System.out::println);
+        users.forEach(t-> System.out.println(t.getAge()));
 
     }
 }
